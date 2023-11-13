@@ -23,12 +23,18 @@
     {% endif %}
   </div>
   <div class="main-content">
-    {% if section.blocks < 1  %}
-      {{ section.settings.description }}
-      {% else %}
-      
+    {% if section.blocks.settings.product == blank %}
+        <div class="main-description">
+            {{ section.settings.description }}
+        </div>
+    {% else %}
+        {% for block in section.blocks %}
+            <div class="block">
+                {{ block.content }}
+            </div>
+        {% endfor %}
     {% endif %}
-  </div>
+</div>
 </div>
 {% schema %}
 {
