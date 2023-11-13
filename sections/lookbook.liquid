@@ -1,45 +1,68 @@
+<style>
+    .container{
+       
+    }
+  .main-image {
+    width: 50%;
+    height: auto;
+    margin: 5px;
+  }
+</style>
+
 <div class="container">
-    <div class="main-image">
-        {% if section.settings.lookbookimage != blank %}
-            <img src="{{ section.settings.lookbookimage }}" alt="">
-            {% else %}
-                {{ 'lifestyle' | append: current |  placeholder_svg_tag: 'placeholder' }}
-        {% endif %}
-
-    </div>
-    <div class="main-content">
-
-    </div>
+  <div class="main-image">
+    {% assign image = section.settings.image %}
+    {% if image != blank %}
+      <img src="{{ image | image_url  }}" alt="{{ image.alt | default: 'look book image' }}">
+    {% else %}
+      {{ 'image' | placeholder_svg_tag: 'placeholder' }}
+    {% endif %}
+  </div>
+  <div class="main-content">
+    {% if section.blocks == blank %}
+      {{ section.settings.main_description }}
+    {% endif %}
+  </div>
 </div>
 {% schema %}
 {
-    "name": "lookbook section",
-    "settings": [
+  "name": "lookbook section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "look book image"
+    },
+    {
+      "type": "text",
+      "id": "main_description",
+      "default": "Example description",
+      "label": "Example description"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "look",
+      "name": "lookbook_product",
+      "settings": [
         {
-            "type": "image_picker",
-            "id": "lookbookimage",
-            "label": "look book image"
-        },
-        {
-            "type": "text",
-            "id": "main_description",
-            "default": "Example description",
-            "label": "Example description"
+          "type": "product",
+          "id": "lookbook_product",
+          "label": "Product"
         }
-        
-        ],
-        "blocks": [
-            {
-                "type": "look",
-                "name": "lookbook_product",
-                "settings": [
-                    {
-                        "type": "product",
-                        "id": "lookbook_product",
-                        "label": "Product"
-                    }
-                ]
-            }
-        ]
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "category": "lookbook",
+      "name": "lookbook section",
+      "blocks": [
+        {
+          "type": "look"
+        }
+      ]
+    }
+  ]
 }
 {% endschema %}
