@@ -7,20 +7,26 @@
     height: auto;
     margin: 5px;
   }
+  .lookbook-image{
+    width: 100%;
+    height: auto;
+  }
 </style>
 
 <div class="container">
   <div class="main-image">
     {% assign image = section.settings.image %}
     {% if image != blank %}
-      <img src="{{ image | image_url  }}" alt="{{ image.alt | default: 'look book image' }}">
+      <img class="lookbook-image" src="{{ image | image_url  }}" alt="{{ image.alt | default: 'look book image' }}">
     {% else %}
       {{ 'image' | placeholder_svg_tag: 'placeholder' }}
     {% endif %}
   </div>
   <div class="main-content">
-    {% if section.blocks == blank %}
-      {{ section.settings.main_description }}
+    {% if section.blocks < 1  %}
+      {{ section.settings.description }}
+      {% else %}
+      
     {% endif %}
   </div>
 </div>
@@ -35,7 +41,7 @@
     },
     {
       "type": "text",
-      "id": "main_description",
+      "id": "description",
       "default": "Example description",
       "label": "Example description"
     }
