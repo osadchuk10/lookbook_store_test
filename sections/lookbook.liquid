@@ -41,10 +41,14 @@
           <div class="products">
             <tr>
                 <td>
-                    {% if prod.featured_media != blank %}
-                        <img src="{{ prod.featured_media | image_url | image_url: width: 100 }}" alt="{{ prod.featured_media.alt }}">
-                        {% else %}
+                    {% if prod.featured_media == blank %}
                         {{ 'product-1' | placeholder_svg_tag: 'card-img-top' }}
+                        {% else %}
+                        <img src="{{ prod.featured_media | image_url | image_url: width: 100 }}" alt="{{ prod.featured_media.alt }}">
+                        {{ prod.title }}
+                        {{ prod.description }}
+                        {{ prod.price |  money_without_trailing_zeros }} 
+                        <button onmouseup="addErrToCart ()" class="lookbook-button">Add to bag</button>
                     {% endif %}
                     
                 </td>
