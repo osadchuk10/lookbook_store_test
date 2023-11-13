@@ -34,22 +34,28 @@
     {% endif %}
   </div>
   <div class="main-content">
-    {% if section.blocks.settings.product == blank %}
-      <div class="main-description">
-        {{ section.settings.description }}
-      </div>
-    {% else %}
-      <table class="products-table">
+    {% if section.blocks != blank %}
+        <table class="products-table">
         {% for block in section.blocks %}
+            {% assign prod = block.settings.lookbookproduct %}
           <div class="products">
             <tr>
                 <td>
-                    <img src="{{ prod.featured_media | image_url | image_url: width: 100 }}" alt="{{ prod.featured_media.alt }}">
+                    {% if prod.featured_media != blank %}
+                        <img src="{{ prod.featured_media | image_url | image_url: width: 100 }}" alt="{{ prod.featured_media.alt }}">
+                        {% else %}
+                        {{ 'product-1' | placeholder_svg_tag: 'card-img-top' }}
+                    {% endif %}
+                    
                 </td>
             </tr>
           </div>
         {% endfor %}
       </table>
+    {% else %}
+    <div class="main-description">
+        {{ section.settings.description }}
+      </div>
     {% endif %}
   </div>
 </div>
@@ -76,7 +82,7 @@
       "settings": [
         {
           "type": "product",
-          "id": "lookbook_product",
+          "id": "lookbookproduct",
           "label": "Product"
         }
       ]
