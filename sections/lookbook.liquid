@@ -1,8 +1,45 @@
 <div class="container">
     <div class="main-image">
+        {% if section.settings.lookbookimage != blank %}
+            <img src="{{ section.settings.lookbookimage }}" alt="">
+            {% else %}
+                {{ 'lifestyle' | append: current |  placeholder_svg_tag: 'placeholder' }}
+        {% endif %}
 
     </div>
     <div class="main-content">
-        
+
     </div>
 </div>
+{% schema %}
+{
+    "name": "lookbook section",
+    "settings": [
+        {
+            "type": "image_picker",
+            "id": "lookbookimage",
+            "label": "look book image"
+        },
+        {
+            "type": "text",
+            "id": "main_description",
+            "default": "Example description",
+            "label": "Example description"
+        }
+        
+        ],
+        "blocks": [
+            {
+                "type": "look",
+                "name": "lookbook_product",
+                "settings": [
+                    {
+                        "type": "product",
+                        "id": "lookbook_product",
+                        "label": "Product"
+                    }
+                ]
+            }
+        ]
+}
+{% endschema %}
