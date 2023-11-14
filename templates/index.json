@@ -73,19 +73,19 @@
         "template--21663578128688__1631626b-646a-4c19-872d-e04961782539-look-1": {
           "type": "look",
           "settings": {
-            "lookbook_product": "fida"
+            "lookbookproduct": "bora"
           }
         },
         "6f77202d-1771-4203-a046-b92c662cd650": {
           "type": "look",
           "settings": {
-            "lookbook_product": "bora"
+            "lookbookproduct": "fida"
           }
         },
         "9c8ab500-9850-4833-853e-759e58fb0516": {
           "type": "look",
           "settings": {
-            "lookbook_product": "the-pillow-bag"
+            "lookbookproduct": "the-pillow-bag"
           }
         }
       },
