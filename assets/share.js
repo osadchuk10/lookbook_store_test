@@ -28,6 +28,7 @@ if (!customElements.get('share-button')) {
           this.mainDetailsToggle.querySelector('.share-button__close').addEventListener('click', this.close.bind(this));
         }
       }
+      
 
       toggleDetails() {
         if (!this.mainDetailsToggle.open) {

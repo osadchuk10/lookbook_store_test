@@ -2,25 +2,135 @@
   .container {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: stretch;
+    justify-content: space-between;
+    background-color: #dadada;
+    padding: 10px;
   }
+
   .main-image {
     width: 50%;
     height: auto;
-    margin: 5px;
+    margin: 15px;
   }
+
   .lookbook-image {
     width: 100%;
     height: auto;
   }
+
   .main-description {
     text-align: center;
     width: 50%;
   }
+
   .main-content {
     width: 50%;
     display: flex;
     justify-content: center;
+    background-color: #f5f2ee;
+    margin: 15px;
+  }
+
+  .lookbook-button {
+    align-items: center;
+    background-color: #fff;
+    border: 2px solid #000;
+    box-sizing: border-box;
+    color: #000;
+    cursor: pointer;
+    display: inline-flex;
+    fill: #000;
+    font-family: Inter, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    height: 48px;
+    justify-content: center;
+    letter-spacing: -0.8px;
+    line-height: 24px;
+    min-width: 140px;
+    outline: 0;
+    padding: 0 17px;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.3s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+  }
+
+  .lookbook-button {
+    color: #171e29;
+  }
+
+  .lookbook-button:hover {
+    border-color: #06f;
+    color: #06f;
+    fill: #06f;
+  }
+
+  .lookbook-button:active {
+    border-color: #06f;
+    color: #06f;
+    fill: #06f;
+  }
+
+  @media (min-width: 768px) {
+    .lookbook-button {
+      min-width: 170px;
+    }
+  }
+
+  .product-content {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+  }
+
+  .product-image {
+    width: 800px;
+  }
+
+  @media screen and (max-width: 2560px) {
+    .product-image {
+      width: 400px;
+    }
+  }
+
+  @media screen and (max-width: 1440px) {
+    .product-image {
+      width: 300px;
+    }
+  }
+
+  @media screen and (max-width: 1024px) {
+    .product-image {
+      width: 250px;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .product-image {
+      width: 200px;
+    }
+  }
+
+  @media screen and (max-width: 425px) {
+    .product-image {
+      width: 125px;
+    }
+  }
+
+  @media screen and (max-width: 375px) {
+    .product-image {
+      width: 75px;
+    }
+  }
+
+  @media screen and (max-width: 320px) {
+    .product-image {
+      width: 50px;
+    }
   }
 </style>
 
@@ -28,80 +138,119 @@
   <div class="main-image">
     {% assign image = section.settings.image %}
     {% if image != blank %}
-      <img class="lookbook-image" src="{{ image | image_url  }}" alt="{{ image.alt | default: 'look book image' }}">
+    <img class="lookbook-image" src="{{ image | image_url  }}" alt="{{ image.alt | default: 'look book image' }}">
     {% else %}
-      {{ 'image' | placeholder_svg_tag: 'placeholder' }}
+    {{ 'image' | placeholder_svg_tag: 'placeholder' }}
     {% endif %}
   </div>
   <div class="main-content">
     {% if section.blocks != blank %}
-        <table class="products-table">
-        {% for block in section.blocks %}
-            {% assign prod = block.settings.lookbookproduct %}
-          <div class="products">
-            <tr>
-                <td>
-                    {% if prod.featured_media == blank %}
-                        {{ 'product-1' | placeholder_svg_tag: 'card-img-top' }}
-                        {% else %}
-                        <img src="{{ prod.featured_media | image_url | image_url: width: 100 }}" alt="{{ prod.featured_media.alt }}">
-                        {{ prod.title }}
-                        {{ prod.description }}
-                        {{ prod.price |  money_without_trailing_zeros }} 
-                        <button onmouseup="addErrToCart ()" class="lookbook-button">Add to bag</button>
-                    {% endif %}
-                    
-                </td>
-            </tr>
+    <table class="products-table">
+      {% assign arrayIds = '' %}
+      {% for block in section.blocks %}
+      {% assign prod = block.settings.lookbookproduct %}
+      {% assign productId = prod.selected_or_first_available_variant.id %}
+      {% assign arrayIds = arrayIds | append: productId | append: ',' %}
+      <tr data-id="{{ productId }}">
+        <td class="product-content">
+          {% if prod.featured_media == blank %}
+          {{ 'product-1' | placeholder_svg_tag: 'card-img-top' }}
+          {% else %}
+          <img class="product-image" src="{{ prod.featured_media | image_url | image_url: width: 250 }}"
+            alt="{{ prod.featured_media.alt }}">
+          <div class="product-description">
+            <b>{{ prod.title }}</b> <span>{{ prod.price | money_without_trailing_zeros }}</span>
+            {{ prod.description }}
+            <button onmouseup="addErrToCart()" class="lookbook-button">Add to bag</button>
           </div>
-        {% endfor %}
-      </table>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
     {% else %}
     <div class="main-description">
-        {{ section.settings.description }}
-      </div>
+      {{ section.settings.description }}
+    </div>
     {% endif %}
   </div>
 </div>
+<script>
+  console.log({{ productId }})
+
+  let prodIds = "{{ arrayIds }}";
+  prodIds = prodIds.split(',').slice(0, -1)
+  console.log(prodIds);
+
+  function addErrToCart() {
+    items = [];
+    for (let i = 0; i < prodIds.length; i++) {
+      let item = { id: prodIds[i], quantity: 1 };
+      items.push(item);
+    }
+    let formData = {
+      items: items
+    };
+    console.log(items)
+    console.log('Form Data:', formData);
+    
+
+    fetch(window.Shopify.routes.root + 'cart/add.js', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+      console.log('Added to the Cart:', formData)
+    
+  }
+</script>
 {% schema %}
 {
-  "name": "lookbook section",
-  "settings": [
-    {
-      "type": "image_picker",
-      "id": "image",
-      "label": "look book image"
-    },
-    {
-      "type": "text",
-      "id": "description",
-      "default": "Example description",
-      "label": "Example description"
-    }
-  ],
-  "blocks": [
-    {
-      "type": "look",
-      "name": "lookbook_product",
-      "settings": [
-        {
-          "type": "product",
-          "id": "lookbookproduct",
-          "label": "Product"
-        }
-      ]
-    }
-  ],
-  "presets": [
-    {
-      "category": "lookbook",
-      "name": "lookbook section",
-      "blocks": [
-        {
-          "type": "look"
-        }
-      ]
-    }
-  ]
+"name": "lookbook section",
+"settings": [
+{
+"type": "image_picker",
+"id": "image",
+"label": "look book image"
+},
+{
+"type": "text",
+"id": "description",
+"default": "Example description",
+"label": "Example description"
+}
+],
+"blocks": [
+{
+"type": "look",
+"name": "lookbook_product",
+"settings": [
+{
+"type": "product",
+"id": "lookbookproduct",
+"label": "Product"
+}
+]
+}
+],
+"presets": [
+{
+"category": "lookbook",
+"name": "lookbook section",
+"blocks": [
+{
+"type": "look"
+}
+]
+}
+]
 }
 {% endschema %}
