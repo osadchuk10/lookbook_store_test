@@ -91,47 +91,13 @@
     width: 800px;
   }
 
-  @media screen and (max-width: 2560px) {
+  @media screen and (max-width: 989px) {
     .product-image {
       width: 400px;
     }
   }
+ 
 
-  @media screen and (max-width: 1440px) {
-    .product-image {
-      width: 300px;
-    }
-  }
-
-  @media screen and (max-width: 1024px) {
-    .product-image {
-      width: 250px;
-    }
-  }
-
-  @media screen and (max-width: 768px) {
-    .product-image {
-      width: 200px;
-    }
-  }
-
-  @media screen and (max-width: 425px) {
-    .product-image {
-      width: 125px;
-    }
-  }
-
-  @media screen and (max-width: 375px) {
-    .product-image {
-      width: 75px;
-    }
-  }
-
-  @media screen and (max-width: 320px) {
-    .product-image {
-      width: 50px;
-    }
-  }
 </style>
 
 <div class="container">
@@ -146,11 +112,11 @@
   <div class="main-content">
     {% if section.blocks != blank %}
     <table class="products-table">
-      {% assign arrayIds = '' %}
+      
       {% for block in section.blocks %}
       {% assign prod = block.settings.lookbookproduct %}
       {% assign productId = prod.selected_or_first_available_variant.id %}
-      {% assign arrayIds = arrayIds | append: productId | append: ',' %}
+    
       <tr data-id="{{ productId }}">
         <td class="product-content">
           {% if prod.featured_media == blank %}
@@ -161,7 +127,7 @@
           <div class="product-description">
             <b>{{ prod.title }}</b> <span>{{ prod.price | money_without_trailing_zeros }}</span>
             {{ prod.description }}
-            <button onmouseup="addErrToCart()" class="lookbook-button">Add to bag</button>
+            <button onclick="addErrToCart({{ productId }})" class="lookbook-button" id="button-{{ forloop.index0 }}">Add to bag</button>
           </div>
           {% endif %}
         </td>
@@ -176,24 +142,18 @@
   </div>
 </div>
 <script>
-  console.log({{ productId }})
 
-  let prodIds = "{{ arrayIds }}";
-  prodIds = prodIds.split(',').slice(0, -1)
-  console.log(prodIds);
-
-  function addErrToCart() {
-    items = [];
-    for (let i = 0; i < prodIds.length; i++) {
-      let item = { id: prodIds[i], quantity: 1 };
-      items.push(item);
-    }
+  function addErrToCart(id) {    
     let formData = {
-      items: items
-    };
-    console.log(items)
-    console.log('Form Data:', formData);
-    
+      items: [
+        {
+          id:id,
+          quantity: 1
+        }
+      ]
+
+      }
+
 
     fetch(window.Shopify.routes.root + 'cart/add.js', {
       method: 'POST',
