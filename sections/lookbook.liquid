@@ -96,64 +96,70 @@
       width: 400px;
     }
   }
- 
-
 </style>
 
 <div class="container">
   <div class="main-image">
     {% assign image = section.settings.image %}
     {% if image != blank %}
-    <img class="lookbook-image" src="{{ image | image_url  }}" alt="{{ image.alt | default: 'look book image' }}">
+      <img class="lookbook-image" src="{{ image | image_url  }}" alt="{{ image.alt | default: 'look book image' }}">
     {% else %}
-    {{ 'image' | placeholder_svg_tag: 'placeholder' }}
+      {{ 'image' | placeholder_svg_tag: 'placeholder' }}
     {% endif %}
   </div>
   <div class="main-content">
     {% if section.blocks != blank %}
-    <table class="products-table">
-      
-      {% for block in section.blocks %}
-      {% assign prod = block.settings.lookbookproduct %}
-      {% assign productId = prod.selected_or_first_available_variant.id %}
-    
-      <tr data-id="{{ productId }}">
-        <td class="product-content">
-          {% if prod.featured_media == blank %}
-          {{ 'product-1' | placeholder_svg_tag: 'card-img-top' }}
-          {% else %}
-          <img class="product-image" src="{{ prod.featured_media | image_url | image_url: width: 250 }}"
-            alt="{{ prod.featured_media.alt }}">
-          <div class="product-description">
-            <b>{{ prod.title }}</b> <span>{{ prod.price | money_without_trailing_zeros }}</span>
-            {{ prod.description }}
-            <button onclick="addErrToCart({{ productId }})" class="lookbook-button" id="button-{{ forloop.index0 }}">Add to bag</button>
-          </div>
-          {% endif %}
-        </td>
-      </tr>
-      {% endfor %}
-    </table>
+      <table class="products-table">
+        {% for block in section.blocks %}
+          {% assign prod = block.settings.lookbookproduct %}
+          {% assign productId = prod.selected_or_first_available_variant.id %}
+
+          <tr data-id="{{ productId }}">
+            <td class="product-content">
+              {% if prod.featured_media == blank %}
+                {{ 'product-1' | placeholder_svg_tag: 'card-img-top' }}
+              {% else %}
+                <div class="product-media">
+                  <img
+                    class="product-image"
+                    src="{{ prod.featured_media | image_url | image_url: width: 250 }}"
+                    alt="{{ prod.featured_media.alt }}"
+                  >
+                </div>
+
+                <div class="product-description">
+                  <b>{{ prod.title }}</b> <span>{{ prod.price | money_without_trailing_zeros }}</span>
+                  {{ prod.description }}
+                  <button
+                    onclick="addErrToCart({{ productId }})"
+                    class="lookbook-button"
+                    id="button-{{ forloop.index0 }}"
+                  >
+                    Add to bag
+                  </button>
+                </div>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </table>
     {% else %}
-    <div class="main-description">
-      {{ section.settings.description }}
-    </div>
+      <div class="main-description">
+        {{ section.settings.description }}
+      </div>
     {% endif %}
   </div>
 </div>
 <script>
-
-  function addErrToCart(id) {    
+  function addErrToCart(id) {
     let formData = {
       items: [
         {
-          id:id,
-          quantity: 1
-        }
-      ]
-
-      }
-
+          id: id,
+          quantity: 1,
+        },
+      ],
+    };
 
     fetch(window.Shopify.routes.root + 'cart/add.js', {
       method: 'POST',
@@ -168,49 +174,48 @@
       .catch((error) => {
         console.error('Error:', error);
       });
-      console.log('Added to the Cart:', formData)
-    
+    console.log('Added to the Cart:', formData);
   }
 </script>
 {% schema %}
 {
-"name": "lookbook section",
-"settings": [
-{
-"type": "image_picker",
-"id": "image",
-"label": "look book image"
-},
-{
-"type": "text",
-"id": "description",
-"default": "Example description",
-"label": "Example description"
-}
-],
-"blocks": [
-{
-"type": "look",
-"name": "lookbook_product",
-"settings": [
-{
-"type": "product",
-"id": "lookbookproduct",
-"label": "Product"
-}
-]
-}
-],
-"presets": [
-{
-"category": "lookbook",
-"name": "lookbook section",
-"blocks": [
-{
-"type": "look"
-}
-]
-}
-]
+  "name": "lookbook section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "look book image"
+    },
+    {
+      "type": "text",
+      "id": "description",
+      "default": "Example description",
+      "label": "Example description"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "look",
+      "name": "lookbook_product",
+      "settings": [
+        {
+          "type": "product",
+          "id": "lookbookproduct",
+          "label": "Product"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "category": "lookbook",
+      "name": "lookbook section",
+      "blocks": [
+        {
+          "type": "look"
+        }
+      ]
+    }
+  ]
 }
 {% endschema %}
