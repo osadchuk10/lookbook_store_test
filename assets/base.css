@@ -2100,7 +2100,7 @@ product-info .loading__spinner:not(.hidden) ~ *,
   display: none;
 }
 
-.cart-count-bubble {
+.cart-count-bubble  {
   position: absolute;
   background-color: rgb(var(--color-button));
   color: rgb(var(--color-button-text));

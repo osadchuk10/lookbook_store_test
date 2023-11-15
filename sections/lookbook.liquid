@@ -112,12 +112,202 @@
     font-size: 1.4rem;
     font-style: italic;
   }
-
-  @media screen and (max-width: 989px) {
+  @media screen and (max-width: 2800px) {
     .product-image {
       width: 400px;
     }
+    .text-title {
+    font-size: 3.5rem;
+    padding-right: 60%;
+    padding-right: 15%;
+}
+.description-product {
+    font-size: 2.5rem;
+    font-style: italic;
+    width: 200%;
+}
+form {
+    width: 150%;
+}
+
+.price-title {
+  font-size: 3.5rem;
+}
+}
+@media screen and (max-width: 1800px) {
+    .text-title {
+    font-size: 2.5rem;
+}
+.price-title {
+  font-size: 2.5rem;
+}
+.description-product {
+    font-size: 2rem;
+    font-style: italic;
+    width: 100%;
+}
+}
+  @media screen and (max-width: 1600px) {
+    .product-image {
+      width: 220px;
+    }
+    .text-title {
+    font-size: 2rem;
+    padding-right: 60%;
+}
+.price-title {
+  font-size: 2rem;
+}
+form {
+    width: 100%;
+}
+.description-product {
+    width: 100%;
+    font-size: 1.5rem;
+}
+.main-content{
+  padding: 2%;
+}
   }
+  @media screen and (max-width: 1041px) {
+    .product-image {
+      width: 200px;
+    }
+    .main-content{
+      padding: 3%;
+    }
+  }
+
+  @media screen and (max-width: 989px) {
+    .product-image {
+      width: 500px;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .main-image {
+      width: 100%;
+      height: auto;
+      display: flex;
+      align-items: center;
+    }
+
+    .main-content {
+      width: 100%;
+      overflow: auto;
+    }
+
+    .product-description {
+      margin-left: 20%;
+    }
+
+    .text-title {
+      font-size: 3rem;
+      padding-right: 30%;
+    }
+
+    .price-title {
+      font-size: 3rem;
+    }
+
+    .main-content {
+      padding: 5%;
+    }
+
+    .product-description {
+      margin-left: 5%;
+    }
+
+    .select {
+      height: 20px;
+    }
+
+    .lookbook-button {
+      height: 32px;
+    }
+
+    .description-product {
+      max-height: 60px;
+      font-size: 1.8rem;
+    }
+  }
+
+  @media screen and (max-width: 842px) {
+    .product-image {
+      width: 400px;
+    }
+
+    .description-product {
+      font-size: 1.6rem;
+    }
+  }
+
+  @media screen and (max-width: 600px) {
+    .product-image {
+      width: 300px;
+    }
+
+    .description-product {
+      font-size: 1.6rem;
+    }
+  }
+
+  @media screen and (max-width: 500px) {
+    .product-image {
+      width: 220px;
+    }
+
+    .description-product {
+      font-size: 1.4rem;
+    }
+
+    .text-title {
+      font-size: 2rem;
+      padding-right: 30%;
+    }
+
+    .price-title {
+      font-size: 2rem;
+    }
+  }
+
+  @media screen and (max-width: 425px) {
+    .product-image {
+      width: 180px;
+    }
+
+    .description-product {
+      font-size: 1.4rem;
+      max-height: 50px;
+    }
+
+    .text-title {
+      font-size: 1.8rem;
+      padding-right: 30%;
+    }
+
+    .price-title {
+      font-size: 1.8rem;
+    }
+  }
+
+  @media screen and (max-width: 380px) {
+    .product-image {
+      width: 150px;
+    }
+
+    .main-content {
+      padding: 2%;
+    }
+
+    .product-description {
+      margin-left: 3%;
+    }
+  }
+
   select {
     align-items: center;
     background-color: #fff;
@@ -187,7 +377,6 @@
                   </div>
                   <div class="description-product">
                     {{ prod.description }}
-                    <p>{{ prod.variant.color }}</p>
                   </div>
                   <div class="button-option">
                     <span>
@@ -259,23 +448,41 @@
       body: JSON.stringify(formData),
     })
       .then((response) => {
-        update_cart();
         return response.json();
       })
-      .then((data) => {
-        update_cart();
-      })
+      .then((data) => update_cart())
+
       .catch((error) => {
         console.error('Error:', error);
       });
     console.log('Added to the Cart:', formData);
   }
 
-
+  document.addEventListener('DOMContentLoaded', function () {
+    update_cart();
+  });
   function update_cart() {
     fetch('/cart.js')
       .then((resp) => resp.json())
-      .then((data) => (document.getElementsByClassName('cart-count-bubble').innerHTML = data.items.length))
+      .then((data) => {
+        console.log(data);
+        return data;
+      })
+      .then((data) => {
+        console.log(data.items.length);
+        return data;
+      })
+      .then((data) => {
+        var element = document.querySelector('.cart-count-bubble');
+        if (data.items.length > 0) {
+          document.getElementById('cart-count-bubble-id').innerHTML = data.items.length;
+          return data;
+        } else {
+          console.log(element);
+          console.log(data);
+          return data;
+        }
+      })
       .catch((err) => console.error(err));
   }
 </script>
