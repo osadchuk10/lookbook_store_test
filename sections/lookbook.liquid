@@ -352,7 +352,15 @@
     margin-bottom: 5px;
   }
 </style>
-
+{% comment %} <div id="root"></div>
+  <script src="path/to/react.js"></script>
+  <script src="path/to/react-dom.js"></script>
+  <script type="module">
+    import React from 'react';
+    import ReactDOM from 'react-dom';
+    import Banner from './Banner'; 
+    ReactDOM.render(<Banner />, document.getElementById('root'));
+  </script> {% endcomment %}
 <div class="container">
   <div class="main-image">
     {% assign image = section.settings.image %}
@@ -501,6 +509,7 @@
       .catch((err) => console.error(err));
   }
 </script>
+
 {% schema %}
 {
   "name": "lookbook section",
