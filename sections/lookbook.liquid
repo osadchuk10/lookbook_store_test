@@ -2,16 +2,15 @@
   .container {
     display: flex;
     flex-direction: row;
-    align-items: stretch;
-    justify-content: space-between;
     background-color: #dadada;
-    padding: 10px;
+    padding: 2%;
   }
 
   .main-image {
     width: 50%;
     height: auto;
-    margin: 15px;
+    display: flex;
+    align-items: center;
   }
 
   .lookbook-image {
@@ -25,11 +24,12 @@
   }
 
   .main-content {
+    overflow: auto;
     width: 50%;
-    display: flex;
-    justify-content: center;
     background-color: #f5f2ee;
-    margin: 15px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    padding: 5%;
   }
 
   .lookbook-button {
@@ -57,6 +57,7 @@
     user-select: none;
     -webkit-user-select: none;
     touch-action: manipulation;
+    border-radius: 5%;
   }
 
   .lookbook-button {
@@ -88,7 +89,28 @@
   }
 
   .product-image {
-    width: 800px;
+    width: 100%;
+  }
+
+  .product-description {
+    margin-left: 20%;
+  }
+
+  .text-title {
+    font-size: 2rem;
+    padding-right: 40%;
+  }
+
+  .price-title {
+    font-size: 2rem;
+    color: #a00323;
+    font-style: italic;
+    font-weight: bolder;
+  }
+
+  .description-product {
+    font-size: 1.4rem;
+    font-style: italic;
   }
 
   @media screen and (max-width: 989px) {
@@ -96,18 +118,51 @@
       width: 400px;
     }
   }
+  select {
+    align-items: center;
+    background-color: #fff;
+    border: 2px solid #000;
+    box-sizing: border-box;
+    color: #000;
+    cursor: pointer;
+    display: inline-flex;
+    fill: #000;
+    font-family: Inter, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    height: 30px;
+    justify-content: center;
+    letter-spacing: -0.8px;
+    line-height: 24px;
+    min-width: 140px;
+    outline: 0;
+    padding: 0 17px;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.3s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    border-radius: 5%;
+    margin-bottom: 5px;
+  }
 </style>
 
 <div class="container">
   <div class="main-image">
     {% assign image = section.settings.image %}
     {% if image != blank %}
-      <img class="lookbook-image" src="{{ image | image_url  }}" alt="{{ image.alt | default: 'look book image' }}">
+      <img
+        id="banner-image"
+        class="lookbook-image"
+        src="{{ image | image_url  }}"
+        alt="{{ image.alt | default: 'look book image' }}"
+      >
     {% else %}
       {{ 'image' | placeholder_svg_tag: 'placeholder' }}
     {% endif %}
   </div>
-  <div class="main-content">
+  <div class="main-content" id="banner-content">
     {% if section.blocks != blank %}
       <table class="products-table">
         {% for block in section.blocks %}
@@ -119,24 +174,44 @@
               {% if prod.featured_media == blank %}
                 {{ 'product-1' | placeholder_svg_tag: 'card-img-top' }}
               {% else %}
-                <div class="product-media">
-                  <img
-                    class="product-image"
-                    src="{{ prod.featured_media | image_url | image_url: width: 250 }}"
-                    alt="{{ prod.featured_media.alt }}"
-                  >
-                </div>
+                <img
+                  class="product-image"
+                  src="{{ prod.featured_media | image_url | image_url: width: 250 }}"
+                  alt="{{ prod.featured_media.alt }}"
+                >
 
                 <div class="product-description">
-                  <b>{{ prod.title }}</b> <span>{{ prod.price | money_without_trailing_zeros }}</span>
-                  {{ prod.description }}
-                  <button
-                    onclick="addErrToCart({{ productId }})"
-                    class="lookbook-button"
-                    id="button-{{ forloop.index0 }}"
-                  >
-                    Add to bag
-                  </button>
+                  <div class="product-title">
+                    <b class="text-title">{{ prod.title }}</b>
+                    <span class="price-title">{{ prod.price | money_without_trailing_zeros }}</span>
+                  </div>
+                  <div class="description-product">
+                    {{ prod.description }}
+                    <p>{{ prod.variant.color }}</p>
+                  </div>
+                  <div class="button-option">
+                    <span>
+                      <form action="#">
+                        <label for="option" class="description-product"><b>Select your option</b></label>
+                        <select name="options" id="option-form-{{ productId }}">
+                          {% for item in prod.variants %}
+                            <option value="{{ item.id }}">
+                              <ul>
+                                <li>{{ item.title }}</li>
+                              </ul>
+                            </option>
+                          {% endfor %}
+                        </select>
+                      </form>
+                      <button
+                        onclick="addErrToCart({{ productId }})"
+                        class="lookbook-button"
+                        id="button-{{ forloop.index0 }}"
+                      >
+                        Add to bag
+                      </button>
+                    </span>
+                  </div>
                 </div>
               {% endif %}
             </td>
@@ -151,7 +226,19 @@
   </div>
 </div>
 <script>
+  window.addEventListener('load', (event) => {
+    document
+      .getElementById('banner-content')
+      .setAttribute('style', 'max-height:' + document.getElementById('banner-image').height + 'px');
+  });
+  window.addEventListener('resize', (event) => {
+    document
+      .getElementById('banner-content')
+      .setAttribute('style', 'max-height:' + document.getElementById('banner-image').height + 'px');
+  });
   function addErrToCart(id) {
+    const variant = document.getElementById('option-form-' + id);
+
     let formData = {
       items: [
         {
@@ -160,6 +247,9 @@
         },
       ],
     };
+    if (variant != undefined) {
+      formData.items[0].id = variant.value;
+    }
 
     fetch(window.Shopify.routes.root + 'cart/add.js', {
       method: 'POST',
@@ -169,12 +259,24 @@
       body: JSON.stringify(formData),
     })
       .then((response) => {
+        update_cart();
         return response.json();
+      })
+      .then((data) => {
+        update_cart();
       })
       .catch((error) => {
         console.error('Error:', error);
       });
     console.log('Added to the Cart:', formData);
+  }
+
+
+  function update_cart() {
+    fetch('/cart.js')
+      .then((resp) => resp.json())
+      .then((data) => (document.getElementsByClassName('cart-count-bubble').innerHTML = data.items.length))
+      .catch((err) => console.error(err));
   }
 </script>
 {% schema %}
