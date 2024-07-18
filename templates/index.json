@@ -1,3 +1,12 @@
+/*
+* ------------------------------------------------------------
+* IMPORTANT: The contents of this file are auto-generated.
+*
+* This file may be updated by the Shopify admin theme editor
+* or related systems. Please exercise caution as any changes
+* made to this file may be overwritten.
+* ------------------------------------------------------------
+*/
 {
   "sections": {
     "image_banner": {
@@ -98,11 +107,46 @@
         "image": "shopify:\/\/shop_images\/00013-Nanushka-Pre-Fall-2022-Credit-Pierre-Ange-Carlotti.webp",
         "description": "Our Latest collection demonstrates an elegant eccentricity - bold patterns inspired by traditional nomadic dressing, embroidered buttons, ceramic detailing and artisanalstitching contrast with stark, clean-lined silhouettes that showcase refined modernity"
       }
+    },
+    "newsletter_KgiMd7": {
+      "type": "newsletter",
+      "blocks": {
+        "heading_NdCWEV": {
+          "type": "heading",
+          "settings": {
+            "heading": "Subscribe to our emails",
+            "heading_size": "h1"
+          }
+        },
+        "paragraph_kFGij3": {
+          "type": "paragraph",
+          "settings": {
+            "text": "<p>Be the first to know about new collections and exclusive offers.<\/p>"
+          }
+        },
+        "email_form_yJXmfe": {
+          "type": "email_form",
+          "settings": {
+          }
+        }
+      },
+      "block_order": [
+        "heading_NdCWEV",
+        "paragraph_kFGij3",
+        "email_form_yJXmfe"
+      ],
+      "settings": {
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
     }
   },
   "order": [
     "image_banner",
     "featured_collection",
-    "1631626b-646a-4c19-872d-e04961782539"
+    "1631626b-646a-4c19-872d-e04961782539",
+    "newsletter_KgiMd7"
   ]
 }
